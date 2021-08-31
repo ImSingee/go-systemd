@@ -222,6 +222,21 @@ func (c *Conn) GetManagerProperty(prop string) (string, error) {
 	return variant.String(), nil
 }
 
+// SysConn returns the underlying sysconn
+func (c *Conn) SysConn() *dbus.Conn {
+	return c.sysconn
+}
+
+// SigConn returns the underlying sigconn
+func (c *Conn) SigConn() *dbus.Conn {
+	return c.sigconn
+}
+
+// Connected returns the status of the underlying connection with dbus
+func (c *Conn) Connected() bool {
+	return c.sysconn.Connected() && c.sigconn.Connected()
+}
+
 func dbusAuthConnection(ctx context.Context, createBus func(opts ...dbus.ConnOption) (*dbus.Conn, error)) (*dbus.Conn, error) {
 	conn, err := createBus(dbus.WithContext(ctx))
 	if err != nil {
